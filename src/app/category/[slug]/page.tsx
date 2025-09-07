@@ -2,10 +2,11 @@
 
 import { useState, useMemo } from 'react'
 import { useParams } from 'next/navigation'
-import { Search, Filter, SlidersHorizontal } from 'lucide-react'
+import { Search, SlidersHorizontal } from 'lucide-react'
 import { products, categories } from '@/lib/data'
 import ProductCard from '@/components/ProductCard'
 import { FilterOptions } from '@/types'
+import Link from 'next/link'
 
 export default function CategoryPage() {
   const params = useParams()
@@ -20,7 +21,7 @@ export default function CategoryPage() {
   const category = categories.find(cat => cat.slug === categorySlug)
 
   const filteredProducts = useMemo(() => {
-    let result = products.filter(product => {
+    const result = products.filter(product => {
       const matchesCategory = product.category === categorySlug
       const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                            product.description.toLowerCase().includes(searchQuery.toLowerCase())
@@ -49,7 +50,7 @@ export default function CategoryPage() {
     }
 
     return result
-  }, [products, categorySlug, searchQuery, filters])
+  }, [categorySlug, searchQuery, filters])
 
   if (!category) {
     return (
@@ -57,9 +58,9 @@ export default function CategoryPage() {
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Không tìm thấy danh mục</h1>
           <p className="text-gray-600 mb-6">Danh mục bạn tìm kiếm không tồn tại</p>
-          <a href="/products" className="bg-black text-white px-6 py-2 rounded hover:bg-gray-800 transition-colors">
+          <Link href="/products" className="bg-black text-white px-6 py-2 rounded hover:bg-gray-800 transition-colors">
             Xem tất cả sản phẩm
-          </a>
+          </Link>
         </div>
       </div>
     )
@@ -99,7 +100,7 @@ export default function CategoryPage() {
 
           <select
             value={filters.sortBy}
-            onChange={(e) => setFilters(prev => ({ ...prev, sortBy: e.target.value as any }))}
+            onChange={(e) => setFilters(prev => ({ ...prev, sortBy: e.target.value as 'price-asc' | 'price-desc' | 'name' | 'rating' }))}
             className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="name">Sắp xếp theo tên</option>
@@ -184,9 +185,9 @@ export default function CategoryPage() {
           <p className="text-gray-500 mb-6">
             Thử tìm kiếm với từ khóa khác hoặc xem danh mục khác
           </p>
-          <a href="/products" className="bg-black text-white px-6 py-2 rounded hover:bg-gray-800 transition-colors">
+          <Link href="/products" className="bg-black text-white px-6 py-2 rounded hover:bg-gray-800 transition-colors">
             Xem tất cả sản phẩm
-          </a>
+          </Link>
         </div>
       )}
     </div>

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { Search, Filter, SlidersHorizontal } from 'lucide-react'
+import { Search, SlidersHorizontal } from 'lucide-react'
 import { products, categories } from '@/lib/data'
 import ProductCard from '@/components/ProductCard'
 import { FilterOptions } from '@/types'
@@ -14,7 +14,7 @@ export default function ProductsPage() {
   const [showFilters, setShowFilters] = useState(false)
 
   const filteredProducts = useMemo(() => {
-    let result = products.filter(product => {
+    const result = products.filter(product => {
       const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                            product.description.toLowerCase().includes(searchQuery.toLowerCase())
       
@@ -44,14 +44,8 @@ export default function ProductsPage() {
     }
 
     return result
-  }, [products, searchQuery, filters])
+  }, [searchQuery, filters])
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND'
-    }).format(price)
-  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -87,7 +81,7 @@ export default function ProductsPage() {
 
           <select
             value={filters.sortBy}
-            onChange={(e) => setFilters(prev => ({ ...prev, sortBy: e.target.value as any }))}
+            onChange={(e) => setFilters(prev => ({ ...prev, sortBy: e.target.value as 'price-asc' | 'price-desc' | 'name' | 'rating' }))}
             className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="name">Sắp xếp theo tên</option>
